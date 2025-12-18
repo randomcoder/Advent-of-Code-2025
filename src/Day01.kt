@@ -1,14 +1,13 @@
+@Suppress("kotlin:S3776")  // Disable cognitive complexity check due to solution structure
 fun main() {
     fun part1(input: List<String>): Int {
         fun rotate(move: String, currentPos: Int): Int {
-            println("move: $move, pos: $currentPos")
             // Get direction and size of move
             val direction = if (move[0] == 'R') 1 else -1
             // Only need last two digits as each 100 is a full rotation
             val amountStr = move.substring(1)
             val amount = if (amountStr.length <=2) amountStr.toInt() else amountStr.substring(amountStr.length - 2).toInt()
 
-            println("From move '${move}', direction: ${direction}, amount: ${amount}")
             val newPos = currentPos + (direction * amount)
             return when {
                 newPos in 0..99 -> newPos
@@ -28,7 +27,26 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        val startPos = 50
+        var currentPos = startPos
+        var passes = 0
+        input.forEach {
+            val rotateBy = it.substring(1).toInt()
+            val rotateDirection = it.substring(0, 1)
+            (0 ..< rotateBy).forEach { _ ->
+                if (rotateDirection == "R") {
+                    currentPos++
+                } else {
+                    currentPos--
+                }
+
+                if (currentPos % 100 == 0) {
+                    passes++
+                }
+            }
+        }
+
+        return passes
     }
 
     // Test if implementation meets criteria from the description, like:
@@ -37,9 +55,9 @@ fun main() {
     // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day01_test")
     check(part1(testInput) == 0)
-
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day01")
+    println("Total inputs: ${input.size}")
     part1(input).println()
     part2(input).println()
 }
